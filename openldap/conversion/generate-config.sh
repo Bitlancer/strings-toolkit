@@ -23,7 +23,7 @@
 if [ -d output ]; then
   rm -rf output
 fi
-yum -y q remove openldap-servers
+yum -y -q remove openldap-servers
 if [ -d /var/lib/ldap ]; then
   rm -rf /var/lib/ldap/*
 fi
