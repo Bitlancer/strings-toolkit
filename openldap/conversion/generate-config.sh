@@ -41,7 +41,7 @@ rm -rf schema
 # Copy other files into place
 cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
 chown ldap:ldap /var/lib/ldap/DB_CONFIG
-cp slapd.conf /etc/openldap/slapd.conf
+cp slapd.conf.obsolete /etc/openldap/slapd.conf
 
 # Begin conversion
 echo "[Notice] Please ignore BDB warnings..."
