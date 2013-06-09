@@ -11,7 +11,7 @@
 #
 # Instructions:
 #
-# * Spin up a CentOS 6.x server
+# * Spin up a CentOS 6.x server with ius, epel, and puppetlabs repos
 # * Grab this directory from git and pop in on said server
 # * Run this script
 # * Grab converted.ldif
@@ -20,7 +20,8 @@
 #
 
 # Install packages
-yum -y -q install openldap-servers wget pdns nss-pam-ldapd
+yum -y -q install openldap-servers wget pdns nss-pam-ldapd puppet mlocate
+updatedb
 
 # Remove slapd.d contents installed with the openldap-servers package
 rm -rf /etc/openldap/slapd.d/*
