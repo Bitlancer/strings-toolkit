@@ -1,0 +1,8 @@
+#
+# Strings Bootstrap LDIF
+#
+
+dn: olcDatabase={0}config
+changeType: modify
+olcRootDN: cn=config
+olcRootPW:: e1NTSEF9IQ==
