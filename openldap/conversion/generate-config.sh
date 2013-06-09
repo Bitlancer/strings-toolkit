@@ -19,9 +19,13 @@
 # * Profit
 #
 
-# Remove output directory if it exists
+# Remove failed/old run
 if [ -d output ]; then
   rm -rf output
+fi
+yum -y q remove openldap-servers
+if [ -d /var/lib/ldap ]; then
+  rm -rf /var/lib/ldap/*
 fi
 
 # Create output directory
