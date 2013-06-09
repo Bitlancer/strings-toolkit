@@ -44,8 +44,8 @@ rm -rf /etc/openldap/slapd.d/*
 # Grab and/or copy schema
 mkdir schema
 cd schema
-wget http://www.linuxnetworks.de/pdnsldap/dnsdomain2.schema
-wget http://openssh-lpk.googlecode.com/files/openssh-lpk_openldap.schema
+wget -q http://www.linuxnetworks.de/pdnsldap/dnsdomain2.schema
+wget -q http://openssh-lpk.googlecode.com/files/openssh-lpk_openldap.schema
 cp /usr/share/puppet/ext/ldap/puppet.schema puppet.schema
 cp /usr/share/doc/pam_ldap-*/ldapns.schema ldapns.schema
 cp /usr/share/doc/sudo-*/schema.OpenLDAP sudo.schema
@@ -59,10 +59,9 @@ chown ldap:ldap /var/lib/ldap/DB_CONFIG
 cp slapd.conf.obsolete /etc/openldap/slapd.conf
 
 # Begin conversion
-echo "[Notice] Please ignore BDB warnings..."
-slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d
+slaptest -Q -u -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d
 slapcat -n 0 > output/modified.ldif
 
 # Exit
-echo "[Notice] Conversion is done, see output directory"
+echo "Conversion is done, see output directory"
 exit 0
