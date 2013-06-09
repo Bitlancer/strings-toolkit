@@ -14,14 +14,25 @@
 # * Spin up a CentOS 6.x server with ius, epel, and puppetlabs repos
 # * Grab this directory from git and pop in on said server
 # * Run this script
-# * Grab converted.ldif
+# * Review information in output
 # * Terminate CentOS 6.x server
 # * Profit
 #
 
+# Remove output directory if it exists
+if [ -d output ]; then
+  rm -rf output
+fi
+
+# Create output directory
+mkdir output
+
 # Install packages
 yum -y -q install openldap-servers wget pdns nss-pam-ldapd puppet mlocate
 updatedb
+
+# Generate original LDIF
+slapcat -n 0 > output/original.ldif
 
 # Remove slapd.d contents installed with the openldap-servers package
 rm -rf /etc/openldap/slapd.d/*
@@ -46,8 +57,8 @@ cp slapd.conf.obsolete /etc/openldap/slapd.conf
 # Begin conversion
 echo "[Notice] Please ignore BDB warnings..."
 slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d
-slapcat -n 0 > converted.ldif
+slapcat -n 0 > output/modified.ldif
 
 # Exit
-echo "[Notice] Conversion is done, see converted.ldif"
+echo "[Notice] Conversion is done, see output directory"
 exit 0
