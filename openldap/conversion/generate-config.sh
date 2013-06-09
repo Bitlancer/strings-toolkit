@@ -59,9 +59,10 @@ chown ldap:ldap /var/lib/ldap/DB_CONFIG
 cp slapd.conf.obsolete /etc/openldap/slapd.conf
 
 # Begin conversion
-slaptest -Q -u -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d
+echo ">>> Please ignore the following warning... :)"
+slaptest -Q -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d
 slapcat -n 0 > output/modified.ldif
 
 # Exit
-echo "Conversion is done, see output directory"
+echo ">>> Conversion is done, see output directory"
 exit 0
