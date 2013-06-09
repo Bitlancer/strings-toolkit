@@ -19,21 +19,30 @@
 # * Profit
 #
 
-# Remove failed/old run
-if [ -d output ]; then
-  yum -y -q remove openldap-servers
-  rm -rf /var/lib/ldap/*
-  rm -rf /etc/openldap/slapd.d
-  rm -rf /etc/openldap/schema
-  rm -rf output
-fi
-
-# Create output directory
-mkdir output
-
 # Install packages
 yum -y -q install openldap-servers wget pdns nss-pam-ldapd puppet mlocate
 updatedb
+
+# Generate backups, or restore from backup if a new run
+if [ -d /etc/openldap.bak ]; then
+  rm -rf /etc/openldap
+  cp -R /etc/openldap.bak /etc/openldap
+else
+  cp -R /etc/openldap /etc/openldap.bak
+fi
+
+if [ -d /var/lib/ldap.bak ]; then
+  rm -rf /var/lib/ldap
+  cp -R /var/lib/ldap.bak /var/lib/ldap
+else
+  cp -R /var/lib/ldap /var/lib/ldap.bak
+fi
+
+if [ -d output ]; then
+  rm -rf output/*
+else
+  mkdir output
+fi
 
 # Generate original LDIF
 slapcat -n 0 > output/original.ldif
