@@ -21,11 +21,11 @@
 
 # Remove failed/old run
 if [ -d output ]; then
-  rm -rf output
-fi
-yum -y -q remove openldap-servers
-if [ -d /var/lib/ldap ]; then
+  yum -y -q remove openldap-servers
   rm -rf /var/lib/ldap/*
+  rm -rf /etc/openldap/slapd.d
+  rm -rf /etc/openldap/schema
+  rm -rf output
 fi
 
 # Create output directory
