@@ -5,4 +5,4 @@
 dn: olcDatabase={0}config
 changeType: modify
 olcRootDN: cn=config
-olcRootPW:: ${ROOTDN_PASSWORD_HASH}
+olcRootPW: ${ROOTDN_PASSWORD_HASH}

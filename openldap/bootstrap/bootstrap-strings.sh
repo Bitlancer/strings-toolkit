@@ -55,7 +55,7 @@ echo
 echo ">>> Generating password hash..."
 echo
 ROOTDN_PASSWORD=`apg -n 1 -m 64 -a 1`
-ROOTDN_PASSWORD_HASH=`slappasswd -s "$ROOTDN_PASSWORD"`
+export ROOTDN_PASSWORD_HASH=`slappasswd -s "$ROOTDN_PASSWORD"`
 echo "  PASSWORD: $ROOTDN_PASSWORD"
 echo
 
