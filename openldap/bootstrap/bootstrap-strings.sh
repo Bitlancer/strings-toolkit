@@ -21,7 +21,7 @@ if [ -f bootstrap-strings.ldif ]; then
 fi
 
 # Install packages
-yum -y -q install openldap-servers apg
+yum -y -q install openldap-servers apg mlocate
 updatedb
 echo
 
@@ -55,14 +55,14 @@ echo
 echo ">>> Generating password hash..."
 echo
 ROOTDN_PASSWORD=`apg -n 1 -m 64 -a 1`
-export ROOTDN_PASSWORD_HASH=`slappasswd -s "$ROOTDN_PASSWORD"`
+ROOTDN_PASSWORD_HASH=`slappasswd -s "$ROOTDN_PASSWORD"`
 echo "  PASSWORD: $ROOTDN_PASSWORD"
 echo
 
 # Generate LDIF
 echo ">>> Generating LDIF..."
 cat bootstrap-strings.ldif.template | while read line; do
-  while [[ "$line" =~ '(\$\{[a-zA-Z_][a-zA-Z_0-9]*\})' ]]; do
+  while [[ "$line" =~ (\$\{[a-zA-Z_][a-zA-Z_0-9]*\}) ]]; do
     LHS=${BASH_REMATCH[1]}
     RHS="$(eval echo "\"$LHS\"")"
     line=${line//$LHS/$RHS}
