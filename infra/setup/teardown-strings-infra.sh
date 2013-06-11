@@ -32,7 +32,7 @@ stty -echo
 read -p "OpenStack (Rackspace) API Key: " OS_API_KEY
 stty echo
 echo
-read -p "OpenStack (Rackspace) Region: " OS_REGION
+read -p "OpenStack (Rackspace) Region (ie: DFW): " OS_REGION
 read -p "Environment Top Level Domain (ie: bitlancer-example.net): " TOP_LEVEL_DOMAIN
 echo
 
