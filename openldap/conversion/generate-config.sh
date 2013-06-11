@@ -14,7 +14,7 @@
 # * Spin up a CentOS 6.x server with ius, epel, and puppetlabs repos
 # * Grab this directory from git and pop in on said server
 # * Run this script
-# * Review information in output
+# * Review information in conversion-output
 # * Terminate CentOS 6.x server
 # * Profit
 #
@@ -38,14 +38,14 @@ else
   cp -R /var/lib/ldap /var/lib/ldap.bak
 fi
 
-if [ -d output ]; then
-  rm -rf output/*
+if [ -d /tmp/conversion-output ]; then
+  rm -rf /tmp/conversion-output/*
 else
-  mkdir output
+  mkdir /tmp/conversion-output
 fi
 
 # Generate original LDIF
-slapcat -n 0 > output/original.ldif
+slapcat -n 0 > /tmp/conversion-output/original.ldif
 
 # Remove slapd.d contents installed with the openldap-servers package
 rm -rf /etc/openldap/slapd.d/*
@@ -70,8 +70,8 @@ cp slapd.conf.obsolete /etc/openldap/slapd.conf
 # Begin conversion
 echo ">>> Please ignore the following warning... :)"
 slaptest -Q -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d
-slapcat -n 0 > output/modified.ldif
+slapcat -n 0 > /tmp/conversion-output/modified.ldif
 
 # Exit
-echo ">>> Conversion is done, see output directory"
+echo ">>> Conversion is done, see /tmp/conversion-output directory"
 exit 0

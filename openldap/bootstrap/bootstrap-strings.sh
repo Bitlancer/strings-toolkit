@@ -16,20 +16,13 @@
 #
 
 # Clean up
-if [ -f bootstrap-strings.ldif ]; then
-  rm bootstrap-strings.ldif
+if [ -f /tmp/bootstrap-strings.ldif ]; then
+  rm /tmp/bootstrap-strings.ldif
 fi
 
 # Install packages
 yum -y -q install openldap-servers apg mlocate
 updatedb
-echo
-
-echo ">>> ARE YOU SURE YOU WANT TO RUN THIS SCRIPT?"
-read -p "Enter ABSOLUTELY to continue: " ANSWER
-if [ "$ANSWER" != "ABSOLUTELY" ]; then
-  exit
-fi
 echo
 
 # Gather information
@@ -67,7 +60,7 @@ cat bootstrap-strings.ldif.template | while read line; do
     RHS="$(eval echo "\"$LHS\"")"
     line=${line//$LHS/$RHS}
   done
-  echo $line >> bootstrap-strings.ldif
+  echo $line >> /tmp/bootstrap-strings.ldif
 done
 
 # Exit
