@@ -126,7 +126,7 @@ for SERVER in /tmp/strings/*.txt; do
   ID=`novaValueByKey id $SERVER`
   NAME=`novaValueByKey name $SERVER`
   IP_ADDRESS=`$NOVACMD show $ID | novaValueByKey accessIPv4`
-  echo "Creating $NAME ($IP_ADDRESS)..."
+  echo ">>> Creating $NAME ($IP_ADDRESS)..."
   $DNSCMD record-create --name $NAME --type A --data $IP_ADDRESS $TOP_LEVEL_DOMAIN > /dev/null
 done
 
