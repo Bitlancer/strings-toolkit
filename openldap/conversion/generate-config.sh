@@ -5,7 +5,7 @@
 # an LDIF that can be used to import into cn=config.
 #
 # This script should only be used when Bitlancer staff make changes to the
-# OpenLDAP bootstrap process and want to use slapd.conf.obsolete instead of
+# OpenLDAP setup process and want to use slapd.conf.obsolete instead of
 # making the change directly to cn=config.  Eventually, a diff is used to
 # update the OpenLDAP bootstrap scripts.
 #
