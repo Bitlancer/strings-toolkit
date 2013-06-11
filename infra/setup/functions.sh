@@ -23,10 +23,20 @@ function getServerName {
 # output: value
 #
 function novaValueByKey {
-  if [ -z "$2" ]; then
+  if [ "$2" ]; then
     grep "^|\ $1" $2 | sed 's/\ //g' | awk -F'|' '{ print $3 }'
   else
     grep "^|\ $1" | sed 's/\ //g' | awk -F'|' '{ print $3 }'
+  fi
+}
+
+#
+# dnsIdByName: gets a DNS record ID by Name
+# input: name
+# output: value
+#
+function dnsIdByName {
+  grep "|\ $1" | sed 's/\ //g' | awk -F'|' '{ print $2 }'
 }
 
 #

@@ -41,14 +41,14 @@ read -p "Environment Top Level Domain (ie: bitlancer-example.net): " TOP_LEVEL_D
 read -p "Environment Data Center (ie: dfw01): " DATA_CENTER
 echo
 
-# Generate our NOVA_BASE command
+# Generate our NOVA and DNS commands
+NOVA_RAX_AUTH=1
 NOVACMD="nova --os-tenant-name $OS_USERNAME --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-auth-system rackspace --os-region-name $OS_REGION --os-username $OS_USERNAME --os-password $OS_API_KEY --no-cache"
 DNSCMD="rackdns --os-tenant-name $OS_USERNAME --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-username $OS_USERNAME --os-password $OS_API_KEY --no-cache"
 
 # Sleeping
 echo ">>> We will run a process that might cause some damage... 5 seconds to CTRL-C!"
 sleep 5
-echo
 
 # Launch Infrastructure
 echo ">>> Launching Puppet Master..."
@@ -87,8 +87,8 @@ $NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 3 --image 
 echo ">>> Launching Dashboard Load Balancer..."
 echo ">>> Launching API Load Balancer..."
 
-echo ">>> Sleeping 3 minutes to give the APIs a break..."
-sleep 180
+echo ">>> Sleeping a few minutes to give the APIs a break..."
+sleep 200
 
 echo ">>> Checking if we're waiting on services..."
 WAITING=2
@@ -114,15 +114,20 @@ echo ">>> Adding Dashboard Servers to Load Balancer..."
 
 echo ">>> Adding API Servers to Load Balancer..."
 
+echo ">>> Verifying DNS configuration..."
+$DNSCMD domain-show $TOP_LEVEL_DOMAIN > /dev/null
+if [ "$?" -gt 0 ]; then
+  read -p "DNS Email Address (ie: it@bitlancer.com): " DNS_EMAIL
+  $DNSCMD domain-create $TOP_LEVEL_DOMAIN --email-address $DNS_EMAIL > /dev/null
+fi
+
 echo ">>> Creating DNS entries..."
 for SERVER in /tmp/strings/*.txt; do
   ID=`novaValueByKey id $SERVER`
   NAME=`novaValueByKey name $SERVER`
-  IP_ADDRESS=`novaValueByKey ip $SERVER`
-  $NOVACMD show $ID | grep ACTIVE > /dev/null
-  if [ "$?" -gt 0 ]; then
-    echo "Creating $NAME ($IP_ADDRESS)..."
-  fi
+  IP_ADDRESS=`$NOVACMD show $ID | novaValueByKey accessIPv4`
+  echo "Creating $NAME ($IP_ADDRESS)..."
+  $DNSCMD record-create --name $NAME --type A --data $IP_ADDRESS $TOP_LEVEL_DOMAIN > /dev/null
 done
 
 # Exit
