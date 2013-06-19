@@ -146,7 +146,7 @@ access to *
 directory	/var/lib/ldap
 
 # Indices to maintain for this database
-index objectClass                       eq,pres
+index objectClass,entryCSN,entryUUID    eq,pres
 index ou,cn,mail,surname,givenname      eq,pres,sub
 index uidNumber,gidNumber,loginShell    eq,pres
 index uid,memberUid                     eq,pres,sub
@@ -154,7 +154,6 @@ index nisMapName,nisMapEntry            eq,pres,sub
 index associatedDomain                  pres,eq,sub
 index aAAARecord                        pres,eq
 index aRecord                           pres,eq
-index objectclass,entryCSN,entryUUID    eq
 
 # Replicas of this database
 #replogfile /var/lib/ldap/openldap-master-replog
