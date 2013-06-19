@@ -100,7 +100,9 @@ TLSCertificateKeyFile /etc/openldap/certs/password
 # rootdn can always read and write EVERYTHING!
 
 # Global ACL
-access to dn="cn=subschema"
+access to dn.base=""
+  by * read
+access to dn.base="cn=Subschema"
   by * read
 
 # enable on-the-fly configuration (cn=config)
