@@ -26,17 +26,17 @@ updatedb
 echo
 
 # Gather information
-read -p "Client Name (ie: Bitlancer LLC): " CLIENT_NAME
-read -p "Client Domain (ie: bitlancer-infra.net): " CLIENT_DOMAIN
-read -p "Client LDAP Server IP (ie: 166.78.255.233): " CLIENT_LDAP_SERVER_IP
+read -p "Client Name (ie: Bitlancer LLC): " client_name
+read -p "Client Domain (ie: bitlancer-infra.net): " client_domain
+read -p "Client LDAP Server IP (ie: 166.78.255.233): " client_ldap_server_ip
 stty -echo
-read -p "Client LDAP Server Root Password (ie: bob123): " CLIENT_LDAP_SERVER_ROOT_PASSWORD
+read -p "Client LDAP Server Root Password (ie: bob123): " client_ldap_server_root_password
 stty echo
 echo
 echo
-echo "  Name: $CLIENT_NAME"
-echo "  Domain: $CLIENT_DOMAIN"
-echo "  IP: $CLIENT_LDAP_SERVER_IP"
+echo "  Name: $client_name"
+echo "  Domain: $client_domain"
+echo "  IP: $client_ldap_server_ip"
 echo
 
 # Sleeping
@@ -47,18 +47,18 @@ echo
 # Generate password hash for LDIF
 echo ">>> Generating password hash..."
 echo
-ROOTDN_PASSWORD=`apg -n 1 -m 64 -a 1`
-ROOTDN_PASSWORD_HASH=`slappasswd -s "$ROOTDN_PASSWORD"`
-echo "  PASSWORD: $ROOTDN_PASSWORD"
+rootdn_password=`apg -n 1 -m 64 -a 1`
+rootdn_password_hash=`slappasswd -s "$rootdn_password"`
+echo "  Password: $rootdn_password"
 echo
 
 # Generate LDIF
 echo ">>> Generating LDIF..."
 cat strings.ldif.template | while read line; do
   while [[ "$line" =~ (\$\{[a-zA-Z_][a-zA-Z_0-9]*\}) ]]; do
-    LHS=${BASH_REMATCH[1]}
-    RHS="$(eval echo "\"$LHS\"")"
-    line=${line//$LHS/$RHS}
+    lhs=${BASH_REMATCH[1]}
+    rhs="$(eval echo "\"$lhs\"")"
+    line=${line//$lhs/$rhs}
   done
   echo $line >> /tmp/strings.ldif
 done

@@ -27,19 +27,19 @@ fi
 installDependencies
 
 # Gather information
-read -p "OpenStack (Rackspace) Username: " OS_USERNAME
+read -p "OpenStack (Rackspace) Username: " os_username
 stty -echo
-read -p "OpenStack (Rackspace) API Key: " OS_API_KEY
+read -p "OpenStack (Rackspace) API Key: " os_api_key
 stty echo
 echo
-read -p "OpenStack (Rackspace) Region (ie: DFW): " OS_REGION
-read -p "Environment Top Level Domain (ie: bitlancer-example.net): " TOP_LEVEL_DOMAIN
+read -p "OpenStack (Rackspace) Region (ie: DFW): " os_region
+read -p "Environment Top Level Domain (ie: bitlancer-example.net): " top_level_domain
 echo
 
 # Generate our NOVA and DNS commands
 NOVA_RAX_AUTH=1
-NOVACMD="nova --os-tenant-name $OS_USERNAME --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-auth-system rackspace --os-region-name $OS_REGION --os-username $OS_USERNAME --os-password $OS_API_KEY --no-cache"
-DNSCMD="rackdns --os-tenant-name $OS_USERNAME --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-username $OS_USERNAME --os-password $OS_API_KEY --no-cache"
+novacmd="nova --os-tenant-name $os_username --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-auth-system rackspace --os-region-name $os_region --os-username $os_username --os-password $os_api_key --no-cache"
+dnscmd="rackdns --os-tenant-name $os_username --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-username $os_username --os-password $os_api_key --no-cache"
 
 # Sleeping
 echo ">>> We will run a process that WILL cause some damage... 10 seconds to CTRL-C!"
@@ -47,26 +47,26 @@ sleep 10
 
 # Kill Infrastructure
 echo ">>> Killing infrastructure..."
-for SERVER in /tmp/strings/*.txt; do
-  ID=`novaValueByKey id $SERVER`
-  NAME=`novaValueByKey name $SERVER`
-  echo ">>> Killing $NAME..."
-  $NOVACMD delete $ID
+for server in /tmp/strings/*.txt; do
+  id=`novaValueByKey id $server`
+  name=`novaValueByKey name $server`
+  echo ">>> Killing $name..."
+  $novacmd delete $id
 done
 
 # Kill DNS
 echo ">>> Killing DNS..."
-for SERVER in /tmp/strings/*.txt; do
-  NAME=`novaValueByKey name $SERVER`
-  ID=`$DNSCMD record-list $TOP_LEVEL_DOMAIN | dnsIdByName $NAME`
-  echo ">>> Killing $NAME..."
-  $DNSCMD record-delete --record_id $ID $TOP_LEVEL_DOMAIN
+for server in /tmp/strings/*.txt; do
+  name=`novaValueByKey name $server`
+  id=`$dnscmd record-list $top_level_domain | dnsIdByName $name`
+  echo ">>> Killing $name..."
+  $dnscmd record-delete --record_id $id $top_level_domain
 done
 
 # Kill Zone?
-read -p "Do you want to kill the zone $TOP_LEVEL_DOMAIN, too? (y/n)" KILL_ZONE
-if [ "$KILL_ZONE" = "y" ]; then
-  $DNSCMD domain-delete $TOP_LEVEL_DOMAIN
+read -p "Do you want to kill the zone $top_level_domain, too? (y/n)" kill_zone
+if [ "$kill_zone" = "y" ]; then
+  $dnscmd domain-delete $top_level_domain
 fi
 
 # Remove

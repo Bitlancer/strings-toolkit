@@ -30,59 +30,37 @@ fi
 installDependencies
 
 # Gather information
-read -p "OpenStack (Rackspace) Username: " OS_USERNAME
+read -p "OpenStack (Rackspace) Username: " os_username
 stty -echo
-read -p "OpenStack (Rackspace) API Key: " OS_API_KEY
+read -p "OpenStack (Rackspace) API Key: " os_api_key
 stty echo
 echo
-read -p "OpenStack (Rackspace) Region (ie: DFW): " OS_REGION
-read -p "OpenStack (Rackspace) Base Image: " BASE_IMAGE
-read -p "Environment Top Level Domain (ie: bitlancer-example.net): " TOP_LEVEL_DOMAIN
-read -p "Environment Data Center (ie: dfw01): " DATA_CENTER
+read -p "OpenStack (Rackspace) Region (ie: DFW): " os_region
+read -p "OpenStack (Rackspace) Base Image: " base_image
+read -p "Environment Top Level Domain (ie: bitlancer-example.net): " top_level_domain
+read -p "Environment Data Center (ie: dfw01): " data_center
 echo
 
 # Generate our NOVA and DNS commands
 NOVA_RAX_AUTH=1
-NOVACMD="nova --os-tenant-name $OS_USERNAME --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-auth-system rackspace --os-region-name $OS_REGION --os-username $OS_USERNAME --os-password $OS_API_KEY --no-cache"
-DNSCMD="rackdns --os-tenant-name $OS_USERNAME --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-username $OS_USERNAME --os-password $OS_API_KEY --no-cache"
+novacmd="nova --os-tenant-name $os_username --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-auth-system rackspace --os-region-name $os_region --os-username $os_username --os-password $os_api_key --no-cache"
+dnscmd="rackdns --os-tenant-name $os_username --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-username $os_username --os-password $os_api_key --no-cache"
 
 # Sleeping
 echo ">>> We will run a process that might cause some damage... 5 seconds to CTRL-C!"
 sleep 5
 
-# Launch Infrastructure
-echo ">>> Launching Puppet Master..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 3 --image $BASE_IMAGE > /tmp/strings/puppet-master-1.txt
+# Launch 512MB instances
+echo ">>> Launching 512MB instances..."
+for instance in q-1 q-2; do
+  $novacmd boot `getServerName`.$data_center.$top_level_domain --flavor 2 --image $base_image > /tmp/strings/$instance.txt
+done
 
-echo ">>> Launching PuppetDB Server..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 3 --image $BASE_IMAGE > /tmp/strings/puppetdb-1.txt
-
-echo ">>> Launching PostgreSQL Server..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 3 --image $BASE_IMAGE > /tmp/strings/postgresql-1.txt
-
-echo ">>> Launching Dashboard Server (1/2)..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 3 --image $BASE_IMAGE > /tmp/strings/dashboard-1.txt
-
-echo ">>> Launching Dashboard Server (2/2)..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 3 --image $BASE_IMAGE > /tmp/strings/dashboard-2.txt
-
-echo ">>> Launching API Server (1/2)..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 3 --image $BASE_IMAGE > /tmp/strings/api-1.txt
-
-echo ">>> Launching API Server (2/2)..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 3 --image $BASE_IMAGE > /tmp/strings/api-2.txt
-
-echo ">>> Launching Q Manager (1/2)..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 2 --image $BASE_IMAGE > /tmp/strings/q-1.txt
-
-echo ">>> Launching Q Manager (2/2)..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 2 --image $BASE_IMAGE > /tmp/strings/q-2.txt
-
-echo ">>> Launching MySQL Server (1/2)..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 3 --image $BASE_IMAGE > /tmp/strings/mysql-1.txt
-
-echo ">>> Launching MySQL Server (2/2)..."
-$NOVACMD boot `getServerName`.$DATA_CENTER.$TOP_LEVEL_DOMAIN --flavor 3 --image $BASE_IMAGE > /tmp/strings/mysql-2.txt
+# Launch 1024MB instances
+echo ">>> Launching 1024MB instances..."
+for instance in puppet-master-1 puppetdb-1 postgresql-1 dashboard-1 dashboard-2 api-1 api-2 mysql-1 mysql-2; do
+  $novacmd boot `getServerName`.$data_center.$top_level_domain --flavor 3 --image $base_image > /tmp/strings/$instance.txt
+done
 
 echo ">>> Launching Dashboard Load Balancer..."
 echo ">>> Launching API Load Balancer..."
@@ -91,20 +69,20 @@ echo ">>> Sleeping a few minutes to give the APIs a break..."
 sleep 200
 
 echo ">>> Checking if we're waiting on services..."
-WAITING=2
-while [ "$WAITING" -ne 0 ]; do
-  WAITING=2
-  for SERVER in /tmp/strings/*.txt; do
-    ID=`novaValueByKey id $SERVER`
-    NAME=`novaValueByKey name $SERVER`
-    $NOVACMD show $ID | grep ACTIVE > /dev/null
+waiting=2
+while [ "$waiting" -ne 0 ]; do
+  waiting=2
+  for server in /tmp/strings/*.txt; do
+    id=`novaValueByKey id $server`
+    name=`novaValueByKey name $server`
+    $novacmd show $id | grep ACTIVE > /dev/null
     if [ "$?" -gt 0 ]; then
-      echo ">>> Still waiting on $NAME... :("
-      WAITING=1
+      echo ">>> Still waiting on $name... :("
+      waiting=1
     fi
   done
-  if [ "$WAITING" -eq 2 ]; then
-    WAITING=0
+  if [ "$waiting" -eq 2 ]; then
+    waiting=0
   else
     sleep 60
   fi
@@ -115,19 +93,19 @@ echo ">>> Adding Dashboard Servers to Load Balancer..."
 echo ">>> Adding API Servers to Load Balancer..."
 
 echo ">>> Verifying DNS configuration..."
-$DNSCMD domain-show $TOP_LEVEL_DOMAIN > /dev/null
+$dnscmd domain-show $top_level_domain > /dev/null
 if [ "$?" -gt 0 ]; then
-  read -p "DNS Email Address (ie: it@bitlancer.com): " DNS_EMAIL
-  $DNSCMD domain-create $TOP_LEVEL_DOMAIN --email-address $DNS_EMAIL > /dev/null
+  read -p "DNS Email Address (ie: it@bitlancer.com): " dns_email
+  $dnscmd domain-create $top_level_domain --email-address $dns_email > /dev/null
 fi
 
 echo ">>> Creating DNS entries..."
-for SERVER in /tmp/strings/*.txt; do
-  ID=`novaValueByKey id $SERVER`
-  NAME=`novaValueByKey name $SERVER`
-  IP_ADDRESS=`$NOVACMD show $ID | novaValueByKey accessIPv4`
-  echo ">>> Creating $NAME ($IP_ADDRESS)..."
-  $DNSCMD record-create --name $NAME --type A --data $IP_ADDRESS $TOP_LEVEL_DOMAIN > /dev/null
+for server in /tmp/strings/*.txt; do
+  id=`novaValueByKey id $server`
+  name=`novaValueByKey name $server`
+  ip_address=`$novacmd show $id | novaValueByKey accessIPv4`
+  echo ">>> Creating $name ($ip_address)..."
+  $dnscmd record-create --name $name --type A --data $ip_address $top_level_domain > /dev/null
 done
 
 # Exit

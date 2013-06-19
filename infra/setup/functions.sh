@@ -45,7 +45,7 @@ function dnsIdByName {
 # output: none
 #
 function installDependencies {
-  yum -y -q install apg mlocate python-setuptools
+  yum -y -q install apg mlocate python-setuptools sshpass
   if [ ! -f /usr/bin/nova ]; then
     easy_install pip > /dev/null
     pip install rackspace-novaclient > /dev/null
@@ -59,4 +59,3 @@ function installDependencies {
   fi
   echo
 }
-
