@@ -1,7 +1,9 @@
 strings-toolkit
 ===============
 
-Bitlancer Strings Toolkit
+This is the Bitlancer Strings Toolkit.  These scripts handle spinning up customer environments, puppet environments, ldap servers, etc.
+
+Be *VERY* careful running these.  They will do damage!!
 
 
 ## Terminology
