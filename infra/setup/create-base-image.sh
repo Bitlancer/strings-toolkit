@@ -62,7 +62,7 @@ while [ "$waiting" -ne 0 ]; do
     name=`novaValueByKey name $server`
     $novacmd show $id | grep ACTIVE > /dev/null
     if [ "$?" -gt 0 ]; then
-      echo ">>> Still waiting on $NAME... :("
+      echo ">>> Still waiting on $name... :("
       waiting=1
     fi
   done
