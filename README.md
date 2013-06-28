@@ -32,6 +32,6 @@ To setup a Strings Customer Puppet Environment (the egg, essentially):
 
 * Run infra/setup/create-customer-dns.sh to create the customer DNS zones in their cloud account.
 * Create any cloud network in the customer's cloud accounts, if applicable.  This is a manual task.
-* Run system/setup/create-customer-schema.sh to create the customer inside the MySQL database (organization, base user, etc.).
 * Run openldap/setup/create-customer.sh to create the new customer database in the primary LDAP server.
+* Run system/setup/create-customer-schema.sh to create the customer inside the MySQL database (organization, base user, etc.).
 * Run infra/setup/bootstrap-customer-infra.sh, passing in the base image ID, to spin up customer puppet infrastructure.
