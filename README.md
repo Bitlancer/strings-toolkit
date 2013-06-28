@@ -4,16 +4,14 @@ strings-toolkit
 Bitlancer Strings Toolkit
 
 
-Terminology
-===========
+## Terminology
 
 * Strings Chicken Environment: Puppet Infrastructure (puppet master, postgresql, puppetdb) plus strings control panel, strings MySQL, strings queue processor, and strings API servers
 * Strings Customer Puppet Environment: A customer's puppet infrastructure (puppet master, postgresql, puppetdb)
 * Stringed Infrastructure: Client infrastructure spun up by the Strings Chicken Environment and Puppetized utilizing the Strings Customer Puppet Environment
 
 
-Strings Chicken Environment
-===========================
+## Strings Chicken Environment
 
 To setup a Strings Chicken Environment (the one that lays the eggs):
 
@@ -28,8 +26,7 @@ To tear down a Strings Chicken Environment (no more eggs?):
 * Profit.  Your environment is gone.  You still have the base image, though!
 
 
-Strings Customer Puppet Environment
-===================================
+## Strings Customer Puppet Environment
 
 To setup a Strings Customer Puppet Environment (the egg, essentially):
 
