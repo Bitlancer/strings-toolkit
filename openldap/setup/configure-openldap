@@ -47,8 +47,8 @@ echo
 # Generate password hash for LDIF
 echo ">>> Generating password hash..."
 echo
-rootdn_password=`apg -n 1 -m 64 -a 1`
-rootdn_password_hash=`slappasswd -s "$rootdn_password"`
+rootdn_password=$(apg -n 1 -m 64 -a 1)
+rootdn_password_hash=$(slappasswd -s "$rootdn_password")
 echo "  Password: $rootdn_password"
 echo
 
@@ -60,7 +60,7 @@ cat strings.ldif.template | while read line; do
     rhs="$(eval echo "\"$lhs\"")"
     line=${line//$lhs/$rhs}
   done
-  echo $line >> /tmp/strings.ldif
+  echo "$line" >> /tmp/strings.ldif
 done
 
 # Exit

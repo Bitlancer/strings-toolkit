@@ -1,0 +1,68 @@
+#!/bin/bash
+#
+# This script takes a Rackspace Cloud account and creates puppet infrastucture
+# (the chicken) and then creates hosted Strings infrastructure (the egg).  The
+# setup can then be used to create more chickens (puppet infrastructure) which
+# can be used to create customer-specific eggs (customer environments).
+#
+# Instructions:
+#
+# * Spin up a CentOS 6.x server with ius, epel, and puppetlabs repos
+# * Grab this directory from git and pop in on said server
+# * Run this script
+# * Terminate CentOS 6.x server
+# * Profit
+#
+
+# Source in shared functions and variables
+source shared.bash
+
+# Sleeping
+echo ">>> We will run a process that might cause some damage... 5 seconds to CTRL-C!"
+sleep 5
+
+# Launch 512MB instances
+echo ">>> Launching 512MB instances..."
+for instance in q-1 q-2; do
+  novaExecute boot "$(getServerName).$data_center.$top_level_domain" --flavor 2 --image "$base_image" > "$output_directory/$instance.txt"
+done
+
+# Launch 1024MB instances
+echo ">>> Launching 1024MB instances..."
+for instance in puppet-master-1 puppetdb-1 postgresql-1 dashboard-1 dashboard-2 api-1 api-2 mysql-1 mysql-2; do
+  novaExecute boot "$(getServerName).$data_center.$top_level_domain" --flavor 3 --image "$base_image" > "$output_directory/$instance.txt"
+done
+
+echo ">>> Launching dashboard load balancer..."
+echo ">>> Launching API load balancer..."
+
+echo ">>> Sleeping a few minutes to give the APIs a break..."
+sleep 200
+
+echo ">>> Checking if we're waiting on services..."
+waitOnServices
+
+echo ">>> Adding dashboard servers to load balancer..."
+
+echo ">>> Adding API servers to load balancer..."
+
+echo ">>> Verifying DNS configuration..."
+dnsExecute domain-show "$top_level_domain" > /dev/null
+if [ "$?" -gt 0 ]; then
+  read -p "DNS Email Address (ie: it@bitlancer.com): " dns_email
+  dnsExecute domain-create "$top_level_domain" --email-address "$dns_email" > /dev/null
+fi
+
+echo ">>> Creating DNS entries..."
+for server in "$output_directory"/*.txt; do
+  id=$(novaValueByKey id "$server")
+  name=$(novaValueByKey name "$server")
+  ip_address=$(novaExecute show "$id" | novaValueByKey accessIPv4)
+  echo ">>> Creating $name ($ip_address)..."
+  dnsExecute record-create --name "$name" --type A --data "$ip_address" "$top_level_domain" > /dev/null
+done
+
+# Exit
+echo ">>> Infrastructure is done, see $output_directory for details"
+finishRunning
+exit 0

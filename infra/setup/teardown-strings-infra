@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# This script tears down strings infrastructure only if the proper files
+# exist in /tmp/strings.  Useful during testing only, as those files tend
+# to go away after the infrastructure is cleaned up.
+#
+# Instructions:
+#
+# * Spin up a CentOS 6.x server with ius, epel, and puppetlabs repos
+# * Grab this directory from git and pop in on said server
+# * Run this script, pray
+# * Terminate CentOS 6.x server
+# * Profit
+#
+
+# Source in shared functions and variables
+source shared.bash
+
+# Check output directory
+if [ ! -d "$1" ]; then
+  echo ">>> You must specify a strings output directory (ie: /tmp/strings.11485)"
+  exit 1
+fi
+
+# Sleeping
+echo ">>> We will run a process that WILL cause some damage... 10 seconds to CTRL-C!"
+sleep 10
+
+# Kill Infrastructure
+echo ">>> Killing infrastructure..."
+for server in "$1"/*.txt; do
+  id=$(novaValueByKey id "$server")
+  name=$(novaValueByKey name "$server")
+  echo ">>> Killing $name..."
+  novaExecute delete "$id"
+done
+
+# Kill DNS
+echo ">>> Killing DNS..."
+for server in "$1"/*.txt; do
+  name=$(novaValueByKey name "$server")
+  id=$(dnsExecute record-list "$top_level_domain" | dnsIdByName "$name")
+  echo ">>> Killing $name..."
+  dnsExecute record-delete --record_id "$id" "$top_level_domain"
+done
+
+# Kill Zone?
+read -p "Do you want to kill the zone $top_level_domain, too? (Y/n): " kill_zone
+if [ "$kill_zone" = "Y" ]; then
+  dnsExecute domain-delete "$top_level_domain"
+fi
+
+# Exit
+echo ">>> Infrastructure and DNS killed."
+finishRunning
+exit 0
