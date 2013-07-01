@@ -130,7 +130,7 @@ function waitOnServices {
 #
 function checkRunning {
   if [ -f /tmp/strings.lock ]; then
-    read -p ">>> We're already running.  Override? (Y/n): " override
+    read -p "*** We're already running.  Override? (Y/n): " override
     if [ "$override" = "Y" ]; then
       rm /tmp/strings.lock
     else

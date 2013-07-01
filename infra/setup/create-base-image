@@ -16,7 +16,7 @@
 source shared.bash
 
 # Sleeping
-echo ">>> We will run a process that might cause some damage... 5 seconds to CTRL-C!"
+echo "*** We will run a process that might cause some damage... 5 seconds to CTRL-C!"
 sleep 5
 
 # Launch Infrastructure

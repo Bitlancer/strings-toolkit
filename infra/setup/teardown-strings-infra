@@ -23,7 +23,7 @@ if [ ! -d "$1" ]; then
 fi
 
 # Sleeping
-echo ">>> We will run a process that WILL cause some damage... 10 seconds to CTRL-C!"
+echo "*** We will run a process that WILL cause some damage... 10 seconds to CTRL-C!"
 sleep 10
 
 # Kill Infrastructure
@@ -45,7 +45,7 @@ for server in "$1"/*.txt; do
 done
 
 # Kill Zone?
-read -p "Do you want to kill the zone $top_level_domain, too? (Y/n): " kill_zone
+read -p "*** Do you want to kill the zone $top_level_domain, too? (Y/n): " kill_zone
 if [ "$kill_zone" = "Y" ]; then
   dnsExecute domain-delete "$top_level_domain"
 fi
