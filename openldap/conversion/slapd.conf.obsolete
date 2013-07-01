@@ -143,7 +143,7 @@ access to *
 # The database directory MUST exist prior to running slapd AND 
 # should only be accessible by the slapd and slap tools.
 # Mode 700 recommended.
-directory	/var/lib/ldap
+directory	/var/lib/ldap/bitlancer-example.net
 
 # Indices to maintain for this database
 index objectClass,entryCSN,entryUUID    eq,pres

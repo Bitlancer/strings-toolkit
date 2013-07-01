@@ -31,13 +31,13 @@ else
   cp -R /etc/openldap /etc/openldap.bak
 fi
 
-if [ -d /var/lib/ldap.bak ]; then
-  rm -rf /var/lib/ldap
-  cp -R /var/lib/ldap.bak /var/lib/ldap
-else
-  cp -R /var/lib/ldap /var/lib/ldap.bak
-fi
+# Generate database directory
+rm -rf /var/lib/ldap/*
+mkdir /var/lib/ldap/bitlancer-example.net
+chown ldap:ldap /var/lib/ldap/bitlancer-example.net
+chmod 700 /var/lib/ldap/bitlancer-example.net
 
+# Cleanup
 if [ -d /tmp/conversion-output ]; then
   rm -rf /tmp/conversion-output/*
 else
@@ -63,8 +63,8 @@ mv schema/* /etc/openldap/schema
 rm -rf schema
 
 # Copy other files into place
-cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
-chown ldap:ldap /var/lib/ldap/DB_CONFIG
+cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/bitlancer-example.net/DB_CONFIG
+chown ldap:ldap /var/lib/ldap/bitlancer-example.net/DB_CONFIG
 cp slapd.conf.obsolete /etc/openldap/slapd.conf
 
 # Begin conversion
