@@ -36,10 +36,7 @@ done
 echo ">>> Launching dashboard load balancer..."
 echo ">>> Launching API load balancer..."
 
-echo ">>> Sleeping a few minutes to give the APIs a break..."
-sleep 200
-
-echo ">>> Checking if we're waiting on services..."
+echo ">>> Waiting on services..."
 waitOnServices
 
 echo ">>> Adding dashboard servers to load balancer..."

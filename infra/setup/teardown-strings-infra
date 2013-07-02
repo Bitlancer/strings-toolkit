@@ -23,8 +23,8 @@ if [ ! -d "$1" ]; then
 fi
 
 # Sleeping
-echo "*** We will run a process that WILL cause some damage... 10 seconds to CTRL-C!"
-sleep 10
+echo "*** We will run a process that WILL cause some damage... 5 seconds to CTRL-C!"
+sleep 5
 
 # Kill Infrastructure
 echo ">>> Killing infrastructure..."

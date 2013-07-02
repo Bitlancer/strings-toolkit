@@ -11,9 +11,6 @@ else
   source configuration.bash
 fi
 
-# Shared variables
-NOVA_RAX_AUTH=1
-
 # Functions
 #
 # getServerName: generate a server name
@@ -21,9 +18,7 @@ NOVA_RAX_AUTH=1
 # output: servername
 #
 function getServerName {
-  n=$(cat /usr/share/dict/words | wc -l)
-  l=$(( ($RANDOM * 32768 + $RANDOM) % n ))
-  cat /usr/share/dict/words | grep -i "^[a-z]*$" | head -$l | tail -1 | tr [A-Z] [a-z]
+  cat /usr/share/dict/words | grep -i "^[a-z]*$" | shuf -n 1 | tr [A-Z] [a-z]
 }
 
 #
@@ -93,7 +88,8 @@ function novaExecute {
 # input: none
 # output: none
 #
-function dnsExecute  {
+function dnsExecute {
+  export NOVA_RAX_AUTH=1
   rackdns --os-tenant-name $os_username --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-username $os_username --os-password $os_api_key --no-cache "$@"
 }
 
@@ -103,6 +99,7 @@ function dnsExecute  {
 # output: none
 #
 function waitOnServices {
+  sleep 180
   waiting=2
   while [ "$waiting" -ne 0 ]; do
     waiting=2
@@ -112,13 +109,12 @@ function waitOnServices {
       novaExecute show "$id" | grep ACTIVE > /dev/null
       if [ "$?" -gt 0 ]; then
         echo ">>> Still waiting on $name... :("
+        sleep 15
         waiting=1
       fi
     done
     if [ "$waiting" -eq 2 ]; then
       waiting=0
-    else
-      sleep 60
     fi
   done
 }

@@ -23,10 +23,7 @@ sleep 5
 echo ">>> Launching template image..."
 novaExecute boot "base-image-v$base_image_version" --flavor 2 --image "$template_image" > "$output_directory/base-image.txt"
 
-echo ">>> Sleeping a few minutes to give the APIs a break..."
-sleep 200
-
-echo ">>> Checking if we're waiting on services..."
+echo ">>> Waiting on services..."
 waitOnServices
 
 # Get variables
