@@ -8,7 +8,7 @@ yum -q -y update
 yum -q -y install ntp nscd postfix sudo collectd puppet ldap bc bind-utils curl finger gnupg man mlocate nano vi emacs joe patch rsync screen systat telnet unzip git puppet
 /sbin/chkconfig puppet --levels 345 on
 hostname | awk -F'-v' '{ print $2 }' > /etc/base-image-version
-git clone git@github.com:Bitlancer/rackspace-causeadelay.git
+export GIT_SSH="ssh -o StrictHostKeyChecking=no"; git clone git@github.com:Bitlancer/rackspace-causeadelay.git
 mv rackspace-causeadelay/causeadelay /etc/init.d/causeadelay
 chmod 755 /etc/init.d/causeadelay
 chown root:root /etc/init.d/causeadelay

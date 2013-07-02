@@ -37,7 +37,7 @@ ip_address=$(novaExecute show "$id" | novaValueByKey accessIPv4)
 echo ">>> Setting up base image..."
 cat commands/centos-6-x86_64.txt | while read command; do
   echo ">>> Executing: $command"
-  sshpass -p "$password" ssh -n -oStrictHostKeyChecking=no "root@$ip_address" "$command"
+  sshpass -p "$password" ssh -n -oStrictHostKeyChecking=no "root@$ip_address" "$command" > /dev/null
 done
 
 echo ">>> Snapshotting base image..."
