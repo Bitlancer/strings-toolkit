@@ -9,6 +9,19 @@ if [ ! -f configuration.bash ]; then
   exit 1
 else
   source configuration.bash
+  echo ">>> Using the following configuration: "
+  echo
+  echo "    Top Level Domain: $top_level_domain"
+  echo "    Data Center: $data_center"
+  echo
+  echo "    Base Image: $base_image"
+  echo "    Base Image Version: $base_image_version"
+  echo "    Template Image: $template_image"
+  echo
+  echo "    OpenStack Username: $os_username"
+  echo "    OpenStack API Key: ********************************"
+  echo "    OpenStack Region: $os_region"
+  echo
 fi
 
 # Functions
@@ -94,15 +107,17 @@ function dnsExecute {
 }
 
 #
-# waitOnServices: waits on services and only returns when done
+# waitOnServices: waits on services and only returns when done or timed out
 # input: none
 # output: none
 #
 function waitOnServices {
-  sleep 180
+  sleep 300
   waiting=2
+  fail_count=0
   while [ "$waiting" -ne 0 ]; do
     waiting=2
+    fail_count=$(expr $fail_count + 1)
     for server in "$output_directory"/*.txt; do
       id=$(novaValueByKey id "$server")
       name=$(novaValueByKey name "$server")
@@ -115,6 +130,13 @@ function waitOnServices {
     done
     if [ "$waiting" -eq 2 ]; then
       waiting=0
+    else
+      if [ "$fail_count" -gt 20 ]; then
+        finishRunning
+        echo ">>> Failing fast on this one, something is up..."
+        echo ">>> You may want to tear down: $output_directory"
+        exit 2
+      fi
     fi
   done
 }

@@ -19,6 +19,7 @@ source shared.bash
 # Check output directory
 if [ ! -d "$1" ]; then
   echo ">>> You must specify a strings output directory (ie: /tmp/strings.11485)"
+  finishRunning
   exit 1
 fi
 

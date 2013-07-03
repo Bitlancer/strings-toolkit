@@ -34,13 +34,17 @@ ip_address=$(novaExecute show "$id" | novaValueByKey accessIPv4)
 echo ">>> Setting up base image..."
 cat commands/centos-6-x86_64.txt | while read command; do
   echo ">>> Executing: $command"
-  sshpass -p "$password" ssh -n -oStrictHostKeyChecking=no "root@$ip_address" "$command" > /dev/null
+  sshpass -p "$password" ssh -o LogLevel=quiet -n -oStrictHostKeyChecking=no "root@$ip_address" "$command" > /dev/null
 done
 
 echo ">>> Snapshotting base image..."
+novaExecute image-create --poll "$id" "base-image-v$base_image_version" > /dev/null
 
-# echo ">>> Killing base image..."
-# novaExecute delete "$id"
+echo ">>> Fetching Image ID... "
+novaExecute image-list | grep "$id" | awk -F'| ' '{ print $2 }'
+
+echo ">>> Killing base image..."
+novaExecute delete "$id"
 
 # Exit
 echo ">>> Infrastructure is done, see $output_directory for details"
