@@ -12,3 +12,4 @@ rm -rf rackspace-causeadelay
 chmod 755 /etc/init.d/causeadelay
 chown root:root /etc/init.d/causeadelay
 chkconfig --add causeadelay
+echo $puppet_tld > /etc/testing

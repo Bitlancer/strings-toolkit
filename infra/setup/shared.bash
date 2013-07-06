@@ -22,6 +22,11 @@ else
   echo "    OpenStack API Key: ********************************"
   echo "    OpenStack Region: $os_region"
   echo
+  echo "    Puppet Top Level Domain: $puppet_tld"
+  echo
+  echo "    Kill top level DNS zone on teardown?: $dns_kill_top_zone"
+  echo "    DNS Email Address: $dns_email_address"
+  echo
 fi
 
 # Functions
@@ -124,14 +129,14 @@ function waitOnServices {
       novaExecute show "$id" | grep ACTIVE > /dev/null
       if [ "$?" -gt 0 ]; then
         echo ">>> Still waiting on $name... :("
-        sleep 15
+        sleep 60
         waiting=1
       fi
     done
     if [ "$waiting" -eq 2 ]; then
       waiting=0
     else
-      if [ "$fail_count" -gt 20 ]; then
+      if [ "$fail_count" -gt 10 ]; then
         finishRunning
         echo ">>> Failing fast on this one, something is up..."
         echo ">>> You may want to tear down: $output_directory"

@@ -46,8 +46,7 @@ echo ">>> Adding API servers to load balancer..."
 echo ">>> Verifying DNS configuration..."
 dnsExecute domain-show "$top_level_domain" > /dev/null
 if [ "$?" -gt 0 ]; then
-  read -p "*** DNS Email Address (ie: it@bitlancer.com): " dns_email
-  dnsExecute domain-create "$top_level_domain" --email-address "$dns_email" > /dev/null
+  dnsExecute domain-create "$top_level_domain" --email-address "$dns_email_address" > /dev/null
 fi
 
 echo ">>> Creating DNS entries..."

@@ -46,8 +46,7 @@ for server in "$1"/*.txt; do
 done
 
 # Kill Zone?
-read -p "*** Do you want to kill the zone $top_level_domain, too? (Y/n): " kill_zone
-if [ "$kill_zone" = "Y" ]; then
+if [ "$dns_kill_top_zone" -eq 1 ]; then
   dnsExecute domain-delete "$top_level_domain"
 fi
 
