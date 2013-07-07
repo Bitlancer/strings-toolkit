@@ -145,7 +145,7 @@ function waitOnServices {
     if [ "$waiting" -eq 2 ]; then
       waiting=0
     else
-      if [ "$fail_count" -gt 10 ]; then
+      if [ "$fail_count" -gt 20 ]; then
         finishRunning
         echo ">>> Failing fast on this one, something is up..."
         echo ">>> You may want to tear down: $output_directory"

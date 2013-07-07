@@ -37,6 +37,7 @@ waitOnServices
 echo ">>> Verifying DNS configuration..."
 dnsExecute domain-show "$top_level_domain" > /dev/null
 if [ "$?" -gt 0 ]; then
+  echo ">>> Creating top level domain..."
   dnsExecute domain-create "$top_level_domain" --email-address "$dns_email_address" > /dev/null
 fi
 
