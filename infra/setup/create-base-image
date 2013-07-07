@@ -46,7 +46,7 @@ sshExecute rm -rf rackspace-causeadelay
 sshExecute chmod 755 /etc/init.d/causeadelay
 sshExecute chown root:root /etc/init.d/causeadelay
 sshExecute chkconfig --add causeadelay
-sshExecute sshExecute "sed -i '14 i\    # SRV Config\n    use_srv_records = true\n    srv_domain = $puppet_tld\n' /etc/puppet/puppet.conf"
+sshExecute "sed -i '14 i\    # SRV Config\n    use_srv_records = true\n    srv_domain = $puppet_tld\n' /etc/puppet/puppet.conf"
 
 echo ">>> Snapshotting base image..."
 novaExecute image-create --poll "$id" "base-image-v$base_image_version" > /dev/null
