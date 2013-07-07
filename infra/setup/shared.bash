@@ -112,6 +112,15 @@ function dnsExecute {
 }
 
 #
+# sshExecute: executes something with ssh
+# input: none
+# output: none
+#
+function sshExecute {
+  sshpass -p "$password" ssh -o LogLevel=quiet -n -oStrictHostKeyChecking=no "root@$ip_address" "$@" > /dev/null
+}
+
+#
 # waitOnServices: waits on services and only returns when done or timed out
 # input: none
 # output: none
