@@ -21,27 +21,18 @@ source shared.bash
 echo "*** We will run a process that might cause some damage... 5 seconds to CTRL-C!"
 sleep 5
 
-# Launch 512MB instances
-echo ">>> Launching 512MB instances..."
-for instance in q-1 q-2; do
+for instance in queue; do
+  echo ">>> Launching instance: $instance"
   novaExecute boot "$(getServerName).$data_center.$top_level_domain" --flavor 2 --image "$base_image" > "$output_directory/$instance.txt"
 done
 
-# Launch 1024MB instances
-echo ">>> Launching 1024MB instances..."
-for instance in puppet-master-1 puppetdb-1 postgresql-1 dashboard-1 dashboard-2 api-1 api-2 mysql-1 mysql-2; do
+for instance in puppetmaster puppetdb dashboard api mysql; do
+  echo ">>> Launching instance: $instance"
   novaExecute boot "$(getServerName).$data_center.$top_level_domain" --flavor 3 --image "$base_image" > "$output_directory/$instance.txt"
 done
 
-echo ">>> Launching dashboard load balancer..."
-echo ">>> Launching API load balancer..."
-
 echo ">>> Waiting on services..."
 waitOnServices
-
-echo ">>> Adding dashboard servers to load balancer..."
-
-echo ">>> Adding API servers to load balancer..."
 
 echo ">>> Verifying DNS configuration..."
 dnsExecute domain-show "$top_level_domain" > /dev/null

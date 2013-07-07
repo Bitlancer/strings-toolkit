@@ -14,7 +14,7 @@ os_username="bitlancer-example"
 os_api_key="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 os_region="DFW"
 
-puppet_tld="first.dfw01.example.strings.bitlancer-app.com"
+puppet_tld="dfw01.example.strings.bitlancer-app.com"
 
 dns_kill_top_zone="1"
 dns_email_address="it@bitlancer-example.com"
