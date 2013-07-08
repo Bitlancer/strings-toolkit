@@ -100,23 +100,16 @@ TLSCertificateKeyFile /etc/openldap/certs/password
 # rootdn can always read and write EVERYTHING!
 
 # Global ACL
-access to dn.base=""
-	by * read
-access to dn.base="cn=Subschema"
-	by * read
+access to dn.base="" by * read
+access to dn.base="cn=Subschema" by * read
 
 # enable on-the-fly configuration (cn=config)
 database config
-access to *
-	by dn.exact="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" manage
-	by * none
+access to * by dn.exact="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" manage by * none
 
 # enable server status monitoring (cn=monitor)
 database monitor
-access to *
-	by dn.exact="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read
-	by dn.exact="cn=Manager,dc=bitlancer-example,dc=net" read
-	by * none
+access to * by dn.exact="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read by dn.exact="cn=Manager,dc=bitlancer-example,dc=net" read by * none
 
 #######################################################################
 # database definitions
@@ -133,17 +126,12 @@ rootdn		"cn=Manager,dc=bitlancer-example,dc=net"
 # rootpw		{crypt}ijFYNcSNctBYg
 
 # ACLs
-access to *
-	by group.exact="cn=rw,ou=groups,ou=ldap,dc=bitlancer-example,dc=net" write
-	by group.exact="cn=ro,ou=groups,ou=ldap,dc=bitlancer-example,dc=net" read
-	by self read
-	by anonymous auth
-	by * none
+access to * by group.exact="cn=rw,ou=groups,ou=ldap,dc=bitlancer-example,dc=net" write by group.exact="cn=ro,ou=groups,ou=ldap,dc=bitlancer-example,dc=net" read by self read by anonymous auth by * none
 
 # The database directory MUST exist prior to running slapd AND 
 # should only be accessible by the slapd and slap tools.
 # Mode 700 recommended.
-directory	/var/lib/ldap/bitlancer-example.net
+directory	/var/lib/ldap
 
 # Indices to maintain for this database
 index objectClass,entryCSN,entryUUID    eq,pres
