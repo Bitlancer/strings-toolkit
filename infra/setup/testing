@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# This script bootstraps puppet, puppetdb, and postgresql on a single server
+#
+
+# Source in shared functions and variables
+source shared.bash
+
+# Temporary
+output_directory="/tmp/strings.25820"
+
+# Get variables
+id=$(novaValueByKey id "$output_directory/puppetmaster.txt")
+password=$(novaValueByKey adminPass "$output_directory/puppetmaster.txt")
+hostname=$(novaValueByKey name "$output_directory/puppetmaster.txt")
+ip_address=$(novaExecute show "$id" | novaValueByKey accessIPv4)
+
+echo ">>> Setting up puppet on $hostname / $password / $ip_address..."
+sshExecute gem install librarian-puppet
+sshExecute rm -rf /etc/puppet/modules /etc/puppet/manifests /etc/puppet/Puppetfile /etc/puppet/Puppetfile.lock /etc/puppet/.gitignore /etc/puppet/.librarian /etc/puppet/.tmp
+sshExecute "cd /etc/puppet/; librarian-puppet init"
+scpExecute Puppetfile /etc/puppet Puppetfile
+sshExecute "cd /etc/puppet/; librarian-puppet install"
+scpExecute puppet/nodes.pp /etc/puppet/manifests nodes.pp
+
+# Exit
+echo ">>> Done"
+finishRunning
+exit 0

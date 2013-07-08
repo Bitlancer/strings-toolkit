@@ -1,0 +1,11 @@
+forge "http://forge.puppetlabs.com"
+
+mod "puppetlabs/ntp"
+mod 'puppetlabs/stdlib'
+mod 'puppetlabs/apt'
+mod 'puppetlabs/puppetdb'
+mod 'puppetlabs/firewall'
+mod 'puppetlabs/apache'
+mod 'puppetlabs/mysql'
+mod 'puppetlabs/postgresql'
+mod 'puppetlabs/passenger'
