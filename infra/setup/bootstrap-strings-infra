@@ -21,14 +21,19 @@ source shared.bash
 echo "*** We will run a process that might cause some damage... 5 seconds to CTRL-C!"
 sleep 5
 
-for instance in queue; do
+for instance in queue api ldap; do
   echo ">>> Launching instance: $instance"
   novaExecute boot "$(getServerName).$data_center.$top_level_domain" --flavor 2 --image "$base_image" > "$output_directory/$instance.txt"
 done
 
-for instance in puppetmaster puppetdb dashboard api mysql; do
+for instance in dashboard mysql; do
   echo ">>> Launching instance: $instance"
   novaExecute boot "$(getServerName).$data_center.$top_level_domain" --flavor 3 --image "$base_image" > "$output_directory/$instance.txt"
+done
+
+for instance in puppet; do
+  echo ">>> Launching instance: $instance"
+  novaExecute boot "$(getServerName).$data_center.$top_level_domain" --flavor 4 --image "$base_image" > "$output_directory/$instance.txt"
 done
 
 echo ">>> Waiting on services..."
