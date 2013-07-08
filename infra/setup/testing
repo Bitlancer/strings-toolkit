@@ -7,13 +7,9 @@
 source shared.bash
 
 # Temporary
-output_directory="/tmp/strings.25820"
-
-# Get variables
-id=$(novaValueByKey id "$output_directory/puppetmaster.txt")
-password=$(novaValueByKey adminPass "$output_directory/puppetmaster.txt")
-hostname=$(novaValueByKey name "$output_directory/puppetmaster.txt")
-ip_address=$(novaExecute show "$id" | novaValueByKey accessIPv4)
+hostname="breakfasts.dfw01.bitlancer-strings-infra.net"
+password="SDu7ikuoZrAP"
+ip_address="166.78.148.114"
 
 echo ">>> Setting up puppet on $hostname / $password / $ip_address..."
 sshExecute gem install librarian-puppet
