@@ -4,8 +4,39 @@
 # base image.
 #
 
-# Source in shared functions and variables
+# Validate configuration
+if [ ! -f configuration.bash ]; then
+  echo ">>> You must setup configuration.bash!"
+  exit 1
+else
+  source configuration.bash
+  echo ">>> Using the following configuration: "
+  echo
+  echo "    Top Level Domain: $top_level_domain"
+  echo "    Data Center: $data_center"
+  echo
+  echo "    OpenStack Username: $os_username"
+  echo "    OpenStack API Key: ********************************"
+  echo "    OpenStack Region: $os_region"
+  echo
+  echo "    Template Image: $template_image"
+  echo "    Base Image Version: $base_image_version"
+  echo
+  echo "    Puppet Top Level Domain: $puppet_tld"
+  echo
+fi
+
+# Source in shared functions
 source shared.bash
+
+# Check if we're already running
+checkRunning
+
+# Install packages
+installDependencies
+
+# Generate output directory
+output_directory=$(getOutputDirectory)
 
 # Sleeping
 echo "*** We will run a process that might cause some damage... 5 seconds to CTRL-C!"

@@ -5,8 +5,36 @@
 # to go away after the infrastructure is cleaned up.
 #
 
-# Source in shared functions and variables
+# Validate configuration
+if [ ! -f configuration.bash ]; then
+  echo ">>> You must setup configuration.bash!"
+  exit 1
+else
+  source configuration.bash
+  echo ">>> Using the following configuration: "
+  echo
+  echo "    Top Level Domain: $top_level_domain"
+  echo "    Data Center: $data_center"
+  echo
+  echo "    OpenStack Username: $os_username"
+  echo "    OpenStack API Key: ********************************"
+  echo "    OpenStack Region: $os_region"
+  echo
+  echo "    Kill top level DNS zone on teardown?: $dns_kill_top_zone"
+  echo
+fi
+
+# Source in shared functions
 source shared.bash
+
+# Check if we're already running
+checkRunning
+
+# Install packages
+installDependencies
+
+# Generate output directory
+output_directory=$(getOutputDirectory)
 
 # Check output directory
 if [ ! -d "$1" ]; then

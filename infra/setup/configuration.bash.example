@@ -6,13 +6,13 @@
 top_level_domain="bitlancer-example.net"
 data_center="dfw01"
 
-base_image="da1f0392-8c64-468f-a839-a9e56caebf07"
-base_image_version="1"
-template_image="da1f0392-8c64-468f-a839-a9e56caebf07"
-
 os_username="bitlancer-example"
 os_api_key="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 os_region="DFW"
+
+template_image="da1f0392-8c64-468f-a839-a9e56caebf07"
+base_image="da1f0392-8c64-468f-a839-a9e56caebf07"
+base_image_version="1"
 
 puppet_tld="dfw01.example.strings.bitlancer-app.com"
 

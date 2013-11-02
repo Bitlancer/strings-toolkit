@@ -3,33 +3,6 @@
 # Shared variables/functions/executions for any strings infrastructure script
 #
 
-# Import configuration
-if [ ! -f configuration.bash ]; then
-  echo ">>> You must setup configuration.bash!"
-  exit 1
-else
-  source configuration.bash
-  echo ">>> Using the following configuration: "
-  echo
-  echo "    Top Level Domain: $top_level_domain"
-  echo "    Data Center: $data_center"
-  echo
-  echo "    Base Image: $base_image"
-  echo "    Base Image Version: $base_image_version"
-  echo "    Template Image: $template_image"
-  echo
-  echo "    OpenStack Username: $os_username"
-  echo "    OpenStack API Key: ********************************"
-  echo "    OpenStack Region: $os_region"
-  echo
-  echo "    Puppet Top Level Domain: $puppet_tld"
-  echo
-  echo "    Kill top level DNS zone on teardown?: $dns_kill_top_zone"
-  echo "    DNS Email Address: $dns_email_address"
-  echo
-fi
-
-# Functions
 #
 # getServerName: generate a server name
 # input: none
@@ -190,12 +163,3 @@ function checkRunning {
 function finishRunning {
   rm /tmp/strings.lock
 }
-
-# Check	if we're already running
-checkRunning
-
-# Install packages
-installDependencies
-
-# Generate output directory
-output_directory=$(getOutputDirectory)
