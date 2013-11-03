@@ -3,18 +3,18 @@
 # Configuration parameters
 #
 
-top_level_domain="bitlancer-example.net"
+top_level_domain="strings-example.net"
 data_center="dfw01"
 
-os_username="bitlancer-example"
+os_username="example"
 os_api_key="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 os_region="DFW"
 
 template_image="da1f0392-8c64-468f-a839-a9e56caebf07"
-base_image="da1f0392-8c64-468f-a839-a9e56caebf07"
+base_image="ea1f0392-8c64-468f-a839-a9e56caebf08"
 base_image_version="1"
 
-puppet_tld="dfw01.example.strings.bitlancer-app.com"
+puppet_tld="dfw01.example.strings-infra.net"
 
 dns_kill_top_zone="1"
-dns_email_address="it@bitlancer-example.com"
+dns_email_address="it@example.com"
