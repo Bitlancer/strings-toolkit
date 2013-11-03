@@ -57,7 +57,7 @@ function installDependencies {
     pip install rackspace-novaclient > /dev/null
   fi
   if [ ! -f /usr/bin/rackdns ]; then
-    git clone https://github.com/kwminnick/rackspace-dns-cli > /dev/null
+    git clone -q https://github.com/kwminnick/rackspace-dns-cli > /dev/null
     cd rackspace-dns-cli
     python setup.py install > /dev/null
     cd ..
