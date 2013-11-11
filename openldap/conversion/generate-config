@@ -31,11 +31,8 @@ else
   cp -R /etc/openldap /etc/openldap.bak
 fi
 
-# Generate database directory
+# Clean default OS database directory
 rm -rf /var/lib/ldap/*
-mkdir /var/lib/ldap/strings-example.net
-chown ldap:ldap /var/lib/ldap/strings-example.net
-chmod 700 /var/lib/ldap/strings-example.net
 
 # Cleanup
 if [ -d /tmp/conversion-output ]; then
@@ -63,8 +60,8 @@ mv schema/* /etc/openldap/schema
 rm -rf schema
 
 # Copy other files into place
-cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/strings-example.net/DB_CONFIG
-chown ldap:ldap /var/lib/ldap/strings-example.net/DB_CONFIG
+cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+chown ldap:ldap /var/lib/ldap/DB_CONFIG
 cp slapd.conf.obsolete /etc/openldap/slapd.conf
 
 # Begin conversion
