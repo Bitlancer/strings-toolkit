@@ -109,16 +109,16 @@ access to * by dn.exact="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
 
 # enable server status monitoring (cn=monitor)
 database monitor
-access to * by dn.exact="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read by dn.exact="cn=Manager,dc=bitlancer-example,dc=net" read by * none
+access to * by dn.exact="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read by dn.exact="cn=Manager,dc=strings-example,dc=net" read by * none
 
 #######################################################################
 # database definitions
 #######################################################################
 
 database	bdb
-suffix		"dc=bitlancer-example,dc=net"
+suffix		"dc=strings-example,dc=net"
 checkpoint	1024 15
-rootdn		"cn=Manager,dc=bitlancer-example,dc=net"
+rootdn		"cn=Manager,dc=strings-example,dc=net"
 # Cleartext passwords, especially for the rootdn, should
 # be avoided.  See slappasswd(8) and slapd.conf(5) for details.
 # Use of strong authentication encouraged.
@@ -126,7 +126,7 @@ rootdn		"cn=Manager,dc=bitlancer-example,dc=net"
 # rootpw		{crypt}ijFYNcSNctBYg
 
 # ACLs
-access to * by group.exact="cn=rw,ou=groups,ou=ldap,dc=bitlancer-example,dc=net" write by group.exact="cn=ro,ou=groups,ou=ldap,dc=bitlancer-example,dc=net" read by self read by anonymous auth by * none
+access to * by group.exact="cn=rw,ou=groups,ou=ldap,dc=strings-example,dc=net" write by group.exact="cn=ro,ou=groups,ou=ldap,dc=strings-example,dc=net" read by self read by anonymous auth by * none
 
 # The database directory MUST exist prior to running slapd AND 
 # should only be accessible by the slapd and slap tools.

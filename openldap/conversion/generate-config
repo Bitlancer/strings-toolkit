@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-# This script takes an out-of-box CentOS install and a Bitlancer-specific
+# This script takes an out-of-box CentOS install and a Strings-specific
 # slapd.conf.obsolete (modified from /usr/share/openldap-servers) and generates
 # an LDIF that can be used to import into cn=config.
 #
-# This script should only be used when Bitlancer staff make changes to the
+# This script should only be used when Strings folk make changes to the
 # OpenLDAP setup process and want to use slapd.conf.obsolete instead of
 # making the change directly to cn=config.  Eventually, a diff is used to
 # update the OpenLDAP bootstrap scripts.
@@ -33,9 +33,9 @@ fi
 
 # Generate database directory
 rm -rf /var/lib/ldap/*
-mkdir /var/lib/ldap/bitlancer-example.net
-chown ldap:ldap /var/lib/ldap/bitlancer-example.net
-chmod 700 /var/lib/ldap/bitlancer-example.net
+mkdir /var/lib/ldap/strings-example.net
+chown ldap:ldap /var/lib/ldap/strings-example.net
+chmod 700 /var/lib/ldap/strings-example.net
 
 # Cleanup
 if [ -d /tmp/conversion-output ]; then
@@ -63,8 +63,8 @@ mv schema/* /etc/openldap/schema
 rm -rf schema
 
 # Copy other files into place
-cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/bitlancer-example.net/DB_CONFIG
-chown ldap:ldap /var/lib/ldap/bitlancer-example.net/DB_CONFIG
+cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/strings-example.net/DB_CONFIG
+chown ldap:ldap /var/lib/ldap/strings-example.net/DB_CONFIG
 cp slapd.conf.obsolete /etc/openldap/slapd.conf
 
 # Begin conversion
