@@ -59,7 +59,7 @@ sshExecute wget -q http://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius
 sshExecute rpm --nosignature --quiet -i ius-release-1.0-11.ius.centos6.noarch.rpm puppetlabs-release-6-7.noarch.rpm
 sshExecute yum --nogpgcheck -q history new
 sshExecute yum --nogpgcheck -q -y update
-sshExecute yum --nogpgcheck -q -y install ntp nscd postfix sudo collectd puppet ldap bc bind-utils curl finger gnupg man mlocate nano vi emacs joe patch rsync screen systat telnet unzip git puppet
+sshExecute yum --nogpgcheck -q -y install ntp nscd postfix sudo collectd puppet ldap bc bind-utils curl finger gnupg man mlocate nano vi emacs joe patch rsync screen sysstat telnet unzip git puppet
 sshExecute rm ius-release-1.0-11.ius.centos6.noarch.rpm puppetlabs-release-6-7.noarch.rpm
 sshExecute chkconfig puppet --levels 345 on
 sshExecute hostname | awk -F'-v' '{ print $2 }' > /etc/base-image-version
