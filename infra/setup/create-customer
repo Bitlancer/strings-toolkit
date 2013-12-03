@@ -10,19 +10,6 @@ if [ ! -f configuration.bash ]; then
   exit 1
 else
   source configuration.bash
-  echo ">>> Using the following configuration: "
-  echo
-  echo "    Top Level Domain: $top_level_domain"
-  echo "    Data Center: $data_center"
-  echo
-  echo "    OpenStack Username: $os_username"
-  echo "    OpenStack API Key: ********************************"
-  echo "    OpenStack Region: $os_region"
-  echo
-  echo "    Base Image: $base_image"
-  echo
-  echo "    DNS Email Address: $dns_email_address"
-  echo
 fi
 
 # Source in shared functions
@@ -43,26 +30,26 @@ sleep 5
 
 for instance in postgresql puppetdb puppetmaster; do
   echo ">>> Launching instance: $instance"
-  novaExecute boot "$(getServerName).$data_center.$top_level_domain" --flavor 2 --image "$base_image" > "$output_directory/$instance.txt"
+  nova boot "$(getServerName).$data_center.$top_level_domain" --flavor 2 --image "$base_image" > "$output_directory/$instance.txt"
 done
 
 echo ">>> Waiting on services..."
 waitOnServices
 
 echo ">>> Verifying DNS configuration..."
-dnsExecute domain-show "$top_level_domain" > /dev/null
+rackdns domain-show "$top_level_domain" > /dev/null
 if [ "$?" -gt 0 ]; then
   echo ">>> Creating top level domain..."
-  dnsExecute domain-create "$top_level_domain" --email-address "$dns_email_address" > /dev/null
+  rackdns domain-create "$top_level_domain" --email-address "$dns_email_address" > /dev/null
 fi
 
 echo ">>> Creating DNS entries..."
 for server in "$output_directory"/*.txt; do
   id=$(novaValueByKey id "$server")
   name=$(novaValueByKey name "$server")
-  ip_address=$(novaExecute show "$id" | novaValueByKey accessIPv4)
+  ip_address=$(nova show "$id" | novaValueByKey accessIPv4)
   echo ">>> Creating $name ($ip_address)..."
-  dnsExecute record-create --name "$name" --type A --data "$ip_address" "$top_level_domain" > /dev/null
+  rackdns record-create --name "$name" --type A --data "$ip_address" "$top_level_domain" > /dev/null
 done
 
 # Exit

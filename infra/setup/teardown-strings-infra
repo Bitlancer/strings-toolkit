@@ -11,17 +11,6 @@ if [ ! -f configuration.bash ]; then
   exit 1
 else
   source configuration.bash
-  echo ">>> Using the following configuration: "
-  echo
-  echo "    Top Level Domain: $top_level_domain"
-  echo "    Data Center: $data_center"
-  echo
-  echo "    OpenStack Username: $os_username"
-  echo "    OpenStack API Key: ********************************"
-  echo "    OpenStack Region: $os_region"
-  echo
-  echo "    Kill top level DNS zone on teardown?: $dns_kill_top_zone"
-  echo
 fi
 
 # Source in shared functions
@@ -53,21 +42,21 @@ for server in "$1"/*.txt; do
   id=$(novaValueByKey id "$server")
   name=$(novaValueByKey name "$server")
   echo ">>> Killing $name..."
-  novaExecute delete "$id"
+  nova delete "$id"
 done
 
 # Kill DNS
 echo ">>> Killing DNS..."
 for server in "$1"/*.txt; do
   name=$(novaValueByKey name "$server")
-  id=$(dnsExecute record-list "$top_level_domain" | dnsIdByName "$name")
+  id=$(rackdns record-list "$top_level_domain" | dnsIdByName "$name")
   echo ">>> Killing $name..."
-  dnsExecute record-delete --record_id "$id" "$top_level_domain"
+  rackdns record-delete --record_id "$id" "$top_level_domain"
 done
 
 # Kill Zone?
 if [ "$dns_kill_top_zone" -eq 1 ]; then
-  dnsExecute domain-delete "$top_level_domain"
+  rackdns domain-delete "$top_level_domain"
 fi
 
 # Exit

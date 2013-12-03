@@ -3,18 +3,22 @@
 # Configuration parameters
 #
 
-top_level_domain="strings-example.net"
+top_level_domain="<customer>-infra.net"
+puppet_tld="dfw01.<customer>.strings-service.net"
 data_center="dfw01"
-
-os_username="example"
-os_api_key="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-os_region="DFW"
-
-template_image="da1f0392-8c64-468f-a839-a9e56caebf07"
-base_image="ea1f0392-8c64-468f-a839-a9e56caebf08"
-base_image_version="1"
-
-puppet_tld="dfw01.example.strings-infra.net"
-
 dns_kill_top_zone="1"
 dns_email_address="it@example.com"
+
+template_image="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+base_image="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+base_image_version="1"
+
+OS_AUTH_URL=https://identity.api.rackspacecloud.com/v2.0/
+OS_AUTH_SYSTEM=rackspace
+OS_REGION_NAME=DFW
+OS_USERNAME=<username>
+OS_TENANT_NAME=<tenant_id>
+NOVA_RAX_AUTH=1
+OS_PASSWORD=<api_key>
+OS_PROJECT_ID=<tenant_id>
+OS_NO_CACHE=1

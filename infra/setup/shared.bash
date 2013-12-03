@@ -51,10 +51,9 @@ function dnsIdByName {
 # output: none
 #
 function installDependencies {
-  yum -y -q install apg mlocate python-setuptools sshpass words python-prettytable python-httplib2 > /dev/null
+  yum -y -q install apg mlocate python-setuptools sshpass words python-prettytable python-httplib2 python-pip > /dev/null
   if [ ! -f /usr/bin/nova ]; then
-    easy_install pip > /dev/null
-    pip install rackspace-novaclient > /dev/null
+    python-pip install rackspace-novaclient > /dev/null
   fi
   if [ ! -f /usr/bin/rackdns ]; then
     git clone -q https://github.com/kwminnick/rackspace-dns-cli > /dev/null
@@ -63,25 +62,6 @@ function installDependencies {
     cd ..
     rm -rf rackspace-dns-cli
   fi
-}
-
-#
-# novaExecute: executes something with novaclient
-# input: none
-# output: none
-#
-function novaExecute {
-  nova --os-tenant-name $os_username --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-auth-system rackspace --os-region-name $os_region --os-username $os_username --os-password $os_api_key --no-cache "$@"
-}
-
-#
-# dnsExecute: executes something with rackspace DNS
-# input: none
-# output: none
-#
-function dnsExecute {
-  export NOVA_RAX_AUTH=1
-  rackdns --os-tenant-name $os_username --os-auth-url https://identity.api.rackspacecloud.com/v2.0/ --os-username $os_username --os-password $os_api_key --no-cache "$@"
 }
 
 #
@@ -119,7 +99,7 @@ function waitOnServices {
     for server in "$output_directory"/*.txt; do
       id=$(novaValueByKey id "$server")
       name=$(novaValueByKey name "$server")
-      novaExecute show "$id" | grep ACTIVE > /dev/null
+      nova show "$id" | grep ACTIVE > /dev/null
       if [ "$?" -gt 0 ]; then
         echo ">>> Still waiting on $name... :("
         sleep 60

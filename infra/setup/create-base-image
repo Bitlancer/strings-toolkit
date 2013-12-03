@@ -10,20 +10,6 @@ if [ ! -f configuration.bash ]; then
   exit 1
 else
   source configuration.bash
-  echo ">>> Using the following configuration: "
-  echo
-  echo "    Top Level Domain: $top_level_domain"
-  echo "    Data Center: $data_center"
-  echo
-  echo "    OpenStack Username: $os_username"
-  echo "    OpenStack API Key: ********************************"
-  echo "    OpenStack Region: $os_region"
-  echo
-  echo "    Template Image: $template_image"
-  echo "    Base Image Version: $base_image_version"
-  echo
-  echo "    Puppet Top Level Domain: $puppet_tld"
-  echo
 fi
 
 # Source in shared functions
@@ -44,7 +30,7 @@ sleep 5
 
 # Launch Infrastructure
 echo ">>> Launching template image..."
-novaExecute boot "base-image-v$base_image_version" --flavor 2 --image "$template_image" > "$output_directory/base-image.txt"
+nova boot "base-image-v$base_image_version" --flavor 2 --image "$template_image" > "$output_directory/base-image.txt"
 
 echo ">>> Waiting on services..."
 waitOnServices
@@ -52,7 +38,7 @@ waitOnServices
 # Get variables
 id=$(novaValueByKey id "$output_directory/base-image.txt")
 password=$(novaValueByKey adminPass "$output_directory/base-image.txt")
-ip_address=$(novaExecute show "$id" | novaValueByKey accessIPv4)
+ip_address=$(nova show "$id" | novaValueByKey accessIPv4)
 
 echo ">>> Setting up base image..."
 sshExecute wget -q http://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-11.ius.centos6.noarch.rpm http://yum.puppetlabs.com/el/6Server/products/x86_64/puppetlabs-release-6-7.noarch.rpm
@@ -72,13 +58,13 @@ sshExecute chkconfig --add causeadelay
 sshExecute "sed -i '14 i\    # SRV Config\n    use_srv_records = true\n    srv_domain = $puppet_tld\n' /etc/puppet/puppet.conf"
 
 echo ">>> Snapshotting base image..."
-novaExecute image-create --poll "$id" "base-image-v$base_image_version" > /dev/null
+nova image-create --poll "$id" "base-image-v$base_image_version" > /dev/null
 
 echo ">>> Fetching Image ID... "
-novaExecute image-list | grep "$id" | awk -F'| ' '{ print $2 }'
+nova image-list | grep "$id" | awk -F'| ' '{ print $2 }'
 
 echo ">>> Killing base image..."
-novaExecute delete "$id"
+nova delete "$id"
 
 # Exit
 echo ">>> Infrastructure is done, see $output_directory for details"
