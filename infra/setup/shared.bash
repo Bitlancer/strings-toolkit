@@ -54,6 +54,12 @@ function installDependencies {
   yum -y -q install apg mlocate python-setuptools sshpass words python-prettytable python-httplib2 python-pip > /dev/null
   if [ ! -f /usr/bin/nova ]; then
     python-pip install rackspace-novaclient > /dev/null
+    git clone git://github.com/openstack/python-novaclient.git > /dev/null
+    cd python-novaclient
+    pip install --requirement requirements.txt > /dev/null
+    python setup.py install > /dev/null
+    cd ..
+    rm -rf python-novaclient
   fi
   if [ ! -f /usr/bin/rackdns ]; then
     git clone -q https://github.com/kwminnick/rackspace-dns-cli > /dev/null
