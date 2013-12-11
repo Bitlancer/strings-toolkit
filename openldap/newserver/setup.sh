@@ -20,9 +20,12 @@ sudo rm -rf /var/lib/ldap/*
 
 # Add in modified.ldif
 sudo slapadd -n 0 -F /etc/openldap/slapd.d -l modified.ldif 
-chown -R ldap:ldap /etc/openldap/slapd.d/ /var/lib/ldap
+chown -R ldap:ldap /etc/openldap/slapd.d /var/lib/ldap
 
 # Create /var/lib/ldap-strings
 sudo mkdir /var/lib/ldap-strings
 sudo chown ldap:ldap /var/lib/ldap-strings 
 sudo chmod 700 /var/lib/ldap-strings
+
+# Start slapd
+sudo /sbin/service slapd start
