@@ -51,3 +51,5 @@ mkdir /var/lib/ldap-strings/${d}.${t}
 chown ldap:ldap /var/lib/ldap-strings/${d}.${t}
 chmod 700 /var/lib/ldap-strings/${d}.${t}
 ldapadd -Y EXTERNAL -H ldapi://%2fvar%2frun%2ldapi -D cn=config -f ${d}.${t}.ldif
+
+rm ${d}.${t}.ldif

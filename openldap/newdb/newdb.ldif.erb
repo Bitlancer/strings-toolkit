@@ -12,7 +12,7 @@ olcRootDN: cn=Manager,dc=<%= DOMAIN %>,dc=<%= TLD %>
 olcRootPW: <%= OLCROOTPW %>
 olcSyncUseSubentry: FALSE
 olcMonitoring: TRUE
-olcDbDirectory: /var/lib/ldap
+olcDbDirectory: /var/lib/ldap-strings/<%= DOMAIN %>.<%= TLD %>
 olcDbCacheSize: 1000
 olcDbCheckpoint: 1024 15
 olcDbConfig: {0}# $OpenLDAP: pkg/ldap/servers/slapd/DB_CONFIG,v 1.3.2.4 2007/1
