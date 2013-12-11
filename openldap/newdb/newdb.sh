@@ -40,7 +40,7 @@ case "${s}" in
         ;;
     s)
         read -p "Cleartext replication password for uid=replication,ou=users,ou=ldap,dc=${d},dc=${t}: " REPLICATIONPW
-        (echo -n "<% DOMAIN=\"${d}\"; TLD=\"${t}\"; INCREMENT=\"${i}\"; OLCROOTPW=\"$OLCROOTPW\"; REPLICATIONPW=\"$REPLICATIONPW\" %>" && cat newdb.ldif.erb && echo && cat slave.ldif.erb) | erb > ${d}.${t}.ldif
+        (echo -n "<% DOMAIN=\"${d}\"; TLD=\"${t}\"; INCREMENT=\"${i}\"; OLCROOTPW=\"$OLCROOTPW\"; REPLICATIONPW=\"$REPLICATIONPW\" %>" && cat newdb.ldif.erb slave.ldif.erb) | erb > ${d}.${t}.ldif
         ;;
     *)
         usage

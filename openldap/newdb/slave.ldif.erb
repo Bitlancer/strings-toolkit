@@ -1,3 +1,2 @@
-dn: olcDatabase={<%= INCREMENT %>}bdb,cn=config
 olcSyncrepl: rid=<%= INCREMENT %> provider=ldap://ldap.strings.dfw01.int.strings-infra.net:389 starttls=critical type=refreshAndPersist searchbase="dc=<%= DOMAIN %>,dc=<%= TLD %>" filter="(objectClass=*)" scope=sub schemachecking=off bindmethod=simple binddn="uid=replication,ou=users,ou=ldap,dc=<%= DOMAIN %>,dc=<%= TLD %>" credentials=<%= REPLICATIONPW %> retry="5 5 300 +"
 olcMirrorMode: FALSE
