@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
+    echo "This script must be run as root" 1>&2
+    exit 1
 fi
 
 usage() { echo "Usage: $0 [-s <m|s>] [-d <domain>] [-t <tld>] [-i <increment>]" 1>&2; exit 1; }
