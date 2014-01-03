@@ -45,7 +45,7 @@ sshExecute wget http://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-re
 sshExecute rpm -i ius-release-1.0-11.ius.centos6.noarch.rpm puppetlabs-release-6-7.noarch.rpm epel-release-6-8.noarch.rpm
 sshExecute yum history new
 sshExecute yum -y update
-sshExecute yum -y install bc bind-utils curl finger git gnupg2 man mlocate nano ntp patch postfix puppet rsync screen sudo sysstat telnet unzip
+sshExecute yum -y install augeas bc bind-utils curl finger git gnupg2 man mlocate nano ntp patch postfix puppet rsync screen sudo sysstat telnet unzip
 sshExecute rm ius-release-1.0-11.ius.centos6.noarch.rpm puppetlabs-release-6-7.noarch.rpm epel-release-6-8.noarch.rpm
 sshExecute chkconfig puppet --levels 345 on
 sshExecute hostname | awk -F'-v' '{ print $2 }' > /etc/base-image-version
