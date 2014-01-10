@@ -96,7 +96,7 @@ function scpExecute {
 # output: none
 #
 function waitOnServices {
-  sleep 300
+  sleep 120
   waiting=2
   fail_count=0
   while [ "$waiting" -ne 0 ]; do

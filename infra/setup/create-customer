@@ -24,11 +24,14 @@ installDependencies
 # Generate output directory
 output_directory=$(getOutputDirectory)
 
+# Get customer name
+read -p "Customer name?: " CUSTOMER_NAME
+
 # Sleeping
 echo "*** We will run a process that might cause some damage... 5 seconds to CTRL-C!"
 sleep 5
 
-for instance in postgresql puppetdb puppetmaster; do
+for instance in puppet-$CUSTOMER_NAME; do
   echo ">>> Launching instance: $instance"
   nova boot "$(getServerName).$data_center.$top_level_domain" --flavor 2 --image "$base_image" > "$output_directory/$instance.txt"
 done

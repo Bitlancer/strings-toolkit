@@ -41,21 +41,25 @@ password=$(novaValueByKey adminPass "$output_directory/base-image.txt")
 ip_address=$(nova show "$id" | novaValueByKey accessIPv4)
 
 echo ">>> Setting up base image..."
-sshExecute wget http://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-11.ius.centos6.noarch.rpm http://yum.puppetlabs.com/el/6Server/products/x86_64/puppetlabs-release-6-7.noarch.rpm https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-sshExecute rpm -i ius-release-1.0-11.ius.centos6.noarch.rpm puppetlabs-release-6-7.noarch.rpm epel-release-6-8.noarch.rpm
-sshExecute yum history new
-sshExecute yum -y update
-sshExecute yum -y install augeas bc bind-utils curl finger git gnupg2 man mlocate nano ntp patch postfix puppet rsync screen sudo sysstat telnet unzip
-sshExecute rm ius-release-1.0-11.ius.centos6.noarch.rpm puppetlabs-release-6-7.noarch.rpm epel-release-6-8.noarch.rpm
+sshExecute wget --quiet http://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-11.ius.centos6.noarch.rpm http://yum.puppetlabs.com/el/6Server/products/x86_64/puppetlabs-release-6-7.noarch.rpm https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+sshExecute rpm --quiet -i --nosignature ius-release-1.0-11.ius.centos6.noarch.rpm puppetlabs-release-6-7.noarch.rpm
+sshExecute rpm --quiet -i --nosignature epel-release-6-8.noarch.rpm
+sshExecute yum --quiet history new
+sshExecute yum --quiet -y update
+sshExecute yum --quiet -y install augeas bc bind-utils curl finger git gnupg2 man mlocate nano ntp patch postfix puppet rsync screen sudo sysstat telnet unzip
+sshExecute rm -f ius-release-1.0-11.ius.centos6.noarch.rpm puppetlabs-release-6-7.noarch.rpm epel-release-6-8.noarch.rpm
 sshExecute chkconfig puppet --levels 345 on
 sshExecute hostname | awk -F'-v' '{ print $2 }' > /etc/base-image-version
-sshExecute git clone https://github.com/Bitlancer/rackspace-causeadelay.git
+sshExecute git clone --quiet https://github.com/Bitlancer/rackspace-causeadelay.git
 sshExecute mv rackspace-causeadelay/causeadelay /etc/init.d/causeadelay
 sshExecute rm -rf rackspace-causeadelay
 sshExecute chmod 755 /etc/init.d/causeadelay
 sshExecute chown root:root /etc/init.d/causeadelay
 sshExecute chkconfig --add causeadelay
-sshExecute "sed -i '14 i\    # SRV Config\n    use_srv_records = true\n    srv_domain = $puppet_tld\n' /etc/puppet/puppet.conf"
+sshExecute sed -i '14 i\    # SRV Config\n    use_srv_records = true\n    srv_domain = $puppet_tld\n\n    # set plugin source\n    pluginsource = puppet:///plugins\n' /etc/puppet/puppet.conf
+
+echo ">>> Validating puppet.conf to you..."
+sshExecute cat /etc/puppet/puppet.conf
 
 echo ">>> Snapshotting base image..."
 nova image-create --poll "$id" "base-image-v$base_image_version" > /dev/null
