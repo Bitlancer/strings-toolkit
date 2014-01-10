@@ -59,7 +59,7 @@ sshExecute chkconfig --add causeadelay
 sshExecute "sed -i '14 i\    # SRV Config\n    use_srv_records = true\n    srv_domain = $puppet_tld\n\n    # set plugin source\n    pluginsource = puppet:///plugins\n' /etc/puppet/puppet.conf"
 
 echo ">>> Snapshotting base image..."
-nova image-create --poll "$id" "base-image-v$base_image_version" > /dev/null
+nova image-create --poll "$id" "$top_level_domain-base-image-v$base_image_version" > /dev/null
 
 echo ">>> Fetching Image ID... "
 nova image-list | grep "$id" | awk -F'| ' '{ print $2 }'
