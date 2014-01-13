@@ -71,26 +71,6 @@ function installDependencies {
 }
 
 #
-# sshExecute: executes something with ssh
-# input: none
-# output: none
-#
-function sshExecute {
-  sshpass -p "$password" ssh -o LogLevel=quiet -n -oStrictHostKeyChecking=no "root@$ip_address" "$@" > /dev/null
-}
-
-#
-# scpExecute: copies a file to the remote host, sort of.
-# input: none
-# output: none
-#
-function scpExecute {
-  if [ "$1" ] && [ "$2" ] && [ "$3" ]; then
-    cat "files/$1" | sshpass -p "$password" ssh -o LogLevel=quiet -oStrictHostKeyChecking=no "root@$ip_address" "mkdir -p $2;cat > $2/$3"
-  fi
-}
-
-#
 # waitOnServices: waits on services and only returns when done or timed out
 # input: none
 # output: none
