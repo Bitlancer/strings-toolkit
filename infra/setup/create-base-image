@@ -30,7 +30,7 @@ sleep 5
 
 # Launch Infrastructure
 echo ">>> Launching template image..."
-nova boot "$top_level_domain-base-image-v$base_image_version" --flavor 2 --image "$template_image" > "$output_directory/base-image.txt"
+nova boot "base-image-v$base_image_version" --flavor 2 --image "$template_image" > "$output_directory/base-image.txt"
 
 echo ">>> Waiting on services..."
 waitOnServices
@@ -58,6 +58,7 @@ chmod 755 /etc/init.d/causeadelay
 chown root:root /etc/init.d/causeadelay
 chkconfig --add causeadelay
 sed -i '14 i\    # SRV Config\n    use_srv_records = true\n    srv_domain = $puppet_tld\n\n    # set plugin source\n    pluginsource = puppet:///plugins\n' /etc/puppet/puppet.conf
+sed -i '/base-image-v$base_image_version/d' /etc/hosts
 EOF
 
 echo ">>> Snapshotting base image..."
