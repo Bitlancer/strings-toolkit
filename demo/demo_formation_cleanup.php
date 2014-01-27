@@ -65,7 +65,7 @@ foreach($results as $formation) {
 
     $queryParams = array(
         ':organization_id' => $organizationId,
-        ':url' => API_URL . "Formations/delete/$formationId",
+        ':url' => API_URL . "/Formations/delete/$formationId",
     );
 
     query($dbConn, $query, $queryParams);
