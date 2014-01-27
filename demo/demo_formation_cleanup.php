@@ -36,6 +36,7 @@ $query = "
     SELECT *
     FROM formation as f
     WHERE f.organization_id IN (" . implode(',',$demoOrgIds) . ") and
+      f.status != 'deleting' and
       f.created < DATE_SUB(NOW(), INTERVAL $deleteAfter)
 ";
 
@@ -45,6 +46,18 @@ foreach($results as $formation) {
 
     $organizationId = $formation['organization_id'];
     $formationId = $formation['id'];
+
+    $query = "
+        UPDATE formation as f
+        SET status = 'deleting'
+        WHERE f.id = :id
+    ";
+
+    $queryParams = array(
+        ':id' => $formationId
+    );
+
+    query($dbConn, $query, $queryParams);
 
     $query = "
         INSERT INTO queued_job (
