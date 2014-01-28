@@ -16,10 +16,20 @@ define('DB_PASS', '');
 define('API_URL', 'https://api.strings.dfw01.int.strings-infra.net');
 
 /*
- * Organization ids of all of the demo accounts
+ * Organization ids and names of all of the demo accounts
+ *
+ * Id and name are required to prevent accidental deletion
+ * of production instances.
+ *
  * Note: these values are not escaped
  */
 $demoOrgIds = array(4, 5, 6);
+
+$demoOrgNames = array(
+    'Omega Demo',
+    'Zeta Demo',
+    'Gamma Demo'
+);
 
 /*
  * Delete formations that have existed for this long
@@ -33,9 +43,11 @@ $deleteAfter = '80 minute';
 $dbConn = dbConnect(DB_CONN_STR, DB_USER, DB_PASS);
 
 $query = "
-    SELECT *
+    SELECT f.*
     FROM formation as f
+    JOIN organization as o on f.organization_id = o.id
     WHERE f.organization_id IN (" . implode(',',$demoOrgIds) . ") and
+      o.name IN ('" . implode("','",$demoOrgNames) . "') and
       f.status != 'deleting' and
       f.created < DATE_SUB(NOW(), INTERVAL $deleteAfter)
 ";
